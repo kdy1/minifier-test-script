@@ -1,0 +1,1 @@
+# minifier-test-script
