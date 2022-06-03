@@ -52,3 +52,7 @@ for (const optionName of optionNames) {
         [optionName]: false,
     })
 }
+
+
+
+await fs.unlink(configJsonPath);
