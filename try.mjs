@@ -32,15 +32,17 @@ const optionNames = [
 
 const configJsonPath = 'swc-compress.json';
 
-const exec = promisify(child_process.exec);
+const spawn = promisify(child_process.spawn);
 
 async function tryOption(description, option) {
     console.log(`Testing: ${description}`);
 
     await fs.writeFile(configJsonPath, JSON.stringify(option));
 
-    const output = await exec(`npm run build`);
-    console.log(output)
+    await spawn(`npm run build`, {
+        shell: true,
+        stdio: 'inherit'
+    });
 }
 
 // Try disabling one option at a time.
