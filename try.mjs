@@ -3,6 +3,7 @@
 import * as  path from 'path';
 import { promises as fs } from 'fs';
 import * as child_process from 'child_process';
+import { promisify } from 'util';
 
 console.log('Testing swc minifier');
 
@@ -31,18 +32,20 @@ const optionNames = [
 
 const configJsonPath = 'swc-compress.json';
 
+const exec = promisify(child_process.exec);
 
 async function tryOption(description, option) {
     console.log(`Testing: ${description}`);
 
     await fs.writeFile(configJsonPath, JSON.stringify(option));
 
-    const output = await child_process.exec(`npm run build`);
+    const output = await exec(`npm run build`);
+    console.log(output)
 }
 
 // Try disabling one option at a time.
 for (const optionName of optionNames) {
-    await tryOption(`without ${optionName}`, {
+    await tryOption(`with '${optionName}: false'`, {
         defaults: true,
         [optionName]: false,
     })
