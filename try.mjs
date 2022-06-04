@@ -43,6 +43,15 @@ async function tryOption(description, option) {
         shell: true,
         stdio: 'inherit'
     });
+
+    await spawn(`git add -A`, {
+        shell: true,
+        stdio: 'inherit'
+    });
+    await spawn(`git commit -m "minifier: ${description}"`, {
+        shell: true,
+        stdio: 'inherit'
+    });
 }
 
 // Try disabling one option at a time.
