@@ -40,7 +40,12 @@ async function waitExec(cmd) {
         shell: true,
         stdio: 'inherit',
     });
+}
 
+async function getCurrentBranch() {
+    const { stdout, stderr } = await exec('git rev-parse --abbrev-ref HEAD');
+
+    return stdout.trim()
 }
 
 
@@ -62,8 +67,14 @@ async function tryOption(description, option) {
         shell: true,
         stdio: 'inherit'
     });
-
 }
+
+const curBranch = await getCurrentBranch();
+
+if (curBranch === 'master' || curBranch === 'main' || curBranch === 'dev') {
+    throw new Error(`Current branch is ${curBranch}. As this script creates lots of commit, it should be on a branch that is not master, main or dev.`);
+}
+
 
 // Try disabling one option at a time.
 for (const optionName of optionNames) {
