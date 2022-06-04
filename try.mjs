@@ -69,6 +69,21 @@ for (const optionName of optionNames) {
     })
 }
 
+// Try disabling two option at a time.
+for (const opt1 of optionNames) {
+    for (const opt2 of optionNames) {
+        if (opt1 === opt2) {
+            continue
+        }
+
+        await tryOption(`with '${opt1}: false, ${opt2}: false'`, {
+            defaults: true,
+            [opt1]: false,
+            [opt2]: false,
+        })
+    }
+}
+
 
 
 await fs.unlink(configJsonPath);
