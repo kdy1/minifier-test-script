@@ -58,6 +58,10 @@ async function tryOption(description, option) {
         shell: true,
         stdio: 'inherit'
     });
+    await waitExec(`git push`, {
+        shell: true,
+        stdio: 'inherit'
+    });
 
 }
 
