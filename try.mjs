@@ -32,26 +32,33 @@ const optionNames = [
 
 const configJsonPath = 'swc-compress.json';
 
-const spawn = promisify(child_process.spawn);
+const exec = promisify(child_process.exec);
+
+async function waitExec(cmd) {
+    console.log(`Executing ${cmd}`)
+    const child = await exec(cmd, {
+        shell: true,
+        stdio: 'inherit',
+    });
+
+}
+
 
 async function tryOption(description, option) {
     console.log(`Testing: ${description}`);
 
     await fs.writeFile(configJsonPath, JSON.stringify(option));
 
-    await spawn(`npm run build`, {
+
+    await waitExec(`git add -A`, {
+        shell: true,
+        stdio: 'inherit'
+    });
+    await waitExec(`git commit -m "minifier: ${description}"`, {
         shell: true,
         stdio: 'inherit'
     });
 
-    await spawn(`git add -A`, {
-        shell: true,
-        stdio: 'inherit'
-    });
-    await spawn(`git commit -m "minifier: ${description}"`, {
-        shell: true,
-        stdio: 'inherit'
-    });
 }
 
 // Try disabling one option at a time.
