@@ -31,6 +31,17 @@ const optionNames = [
 ]
 
 const dryRun = process.argv.includes('--dry-run');
+const upstreamBranch = process.argv.find(v => {
+    if (v.startsWith('--upstream-branch=')) {
+        return v.substring('--upstream-branch='.length)
+    } else {
+        undefined
+    }
+});
+
+if (!upstreamBranch) {
+    throw new Error(`Please set the upstream branch with --upstream-branch=<branch>`)
+}
 
 const configJsonPath = 'swc-compress.json';
 

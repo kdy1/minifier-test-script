@@ -14,11 +14,6 @@ The swc minifier is 20K+ LoCs so looking at all code is impractical, but if the 
 --upstream-branch=<name>        Use <name> as the name of upstream branch.
 ```
 
-# TODOs
-
-- Accept name for upstream branch
-- Dry run
-
 ## Steps
 
 ### 1. Modify `next.config.js`
