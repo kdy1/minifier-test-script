@@ -31,13 +31,7 @@ const optionNames = [
 ]
 
 const dryRun = process.argv.includes('--dry-run');
-const upstreamBranch = process.argv.find(v => {
-    if (v.startsWith('--upstream-branch=')) {
-        return v.substring('--upstream-branch='.length)
-    } else {
-        undefined
-    }
-});
+const upstreamBranch = process.argv.find(v => v.startsWith('--upstream-branch='))?.substring('--upstream-branch='.length);
 
 if (!upstreamBranch) {
     throw new Error(`Please set the upstream branch with --upstream-branch=<branch>`)
@@ -80,7 +74,7 @@ async function tryOption(description, option) {
         shell: true,
         stdio: 'inherit'
     });
-    await waitExec(`git push`, {
+    await waitExec(`git push origin HEAD:${upstreamBranch}`, {
         shell: true,
         stdio: 'inherit'
     });
