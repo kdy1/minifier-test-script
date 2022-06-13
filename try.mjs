@@ -40,10 +40,11 @@ if (!upstreamBranch) {
 const configJsonPath = 'swc-compress.json';
 
 const exec = promisify(child_process.exec);
+const spawn = promisify(child_process.spawn);
 
 async function waitExec(cmd) {
 
-    console.log(`Executing ${cmd}`)
+    console.log(`${dryRun ? '[DRY_RUN]' : ''} Executing ${cmd}`)
 
     if (!dryRun) {
         const child = await exec(cmd, {
@@ -63,7 +64,10 @@ async function getCurrentBranch() {
 async function tryOption(description, option) {
     console.group(`Testing: ${description}`);
 
-    await fs.writeFile(configJsonPath, JSON.stringify(option));
+    console.log(`Writing '${JSON.stringify(option)}' to ${configJsonPath}`);
+    if (!dryRun) {
+        await fs.writeFile(configJsonPath, JSON.stringify(option));
+    }
 
 
     await waitExec(`git add -A`, {
@@ -112,5 +116,6 @@ for (const opt1 of optionNames) {
 }
 
 
-
-await fs.unlink(configJsonPath);
+if (dryRun) {
+    await fs.unlink(configJsonPath);
+}
