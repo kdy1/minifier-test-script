@@ -7,6 +7,18 @@ It first disables one option at a time, and it then disables two options at a ti
 If your app is broken with default config but it works with specific option disabled, it means there's a bug related to the specific option.
 The swc minifier is 20K+ LoCs so looking at all code is impractical, but if the scope is reduced to a single option, we can debug it.
 
+## Options
+
+```
+--dry-run                       Show operations without actually applying it.
+--upstream-branch=<name>        Use <name> as the name of upstream branch.
+```
+
+# TODOs
+
+- Accept name for upstream branch
+- Dry run
+
 ## Steps
 
 ### 1. Modify `next.config.js`

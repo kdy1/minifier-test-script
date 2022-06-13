@@ -30,6 +30,8 @@ const optionNames = [
     'unused',
 ]
 
+const dryRun = process.argv.includes('--dry-run');
+
 const configJsonPath = 'swc-compress.json';
 
 const exec = promisify(child_process.exec);
