@@ -48,11 +48,15 @@ const configJsonPath = 'swc-compress.json';
 const exec = promisify(child_process.exec);
 
 async function waitExec(cmd) {
+
     console.log(`Executing ${cmd}`)
-    const child = await exec(cmd, {
-        shell: true,
-        stdio: 'inherit',
-    });
+
+    if (!dryRun) {
+        const child = await exec(cmd, {
+            shell: true,
+            stdio: 'inherit',
+        });
+    }
 }
 
 async function getCurrentBranch() {
@@ -63,7 +67,7 @@ async function getCurrentBranch() {
 
 
 async function tryOption(description, option) {
-    console.log(`Testing: ${description}`);
+    console.group(`Testing: ${description}`);
 
     await fs.writeFile(configJsonPath, JSON.stringify(option));
 
@@ -80,6 +84,7 @@ async function tryOption(description, option) {
         shell: true,
         stdio: 'inherit'
     });
+    console.groupEnd()
 }
 
 const curBranch = await getCurrentBranch();
