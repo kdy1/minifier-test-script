@@ -31,7 +31,7 @@ to the top and add
 {
   experimental: {
     swcMinifyDebugOptions: {
-      compress: compressConfig;
+      compress: compressConfig,
     }
   }
 }
