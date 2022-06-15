@@ -32,17 +32,16 @@ const optionNames = [
 
 const dryRun = process.argv.includes('--dry-run');
 const upstreamBranch = process.argv.find(v => v.startsWith('--upstream-branch='))?.substring('--upstream-branch='.length);
-const projectDir = (process.argv.find(v => v.startsWith('--project-dir='))?.substring('--project-dir='.length)) ?? '.';
+const projectDirs = process.argv.filter(v => v.startsWith('--dir=')).map(s => s.substring('--dir='.length));
+if (projectDirs.length === 0) {
+    projectDirs.push('.')
+}
 
 if (!upstreamBranch) {
     throw new Error(`Please set the upstream branch with --upstream-branch=<branch>`)
 }
 
-if (!projectDir) {
-    throw new Error(`Project directory has an invalid value (${projectDir}). Usage: --project-dir=path/to/project/dir`)
-}
-
-const configJsonPath = `${projectDir}/swc-compress.json`;
+const configJsonPath = (projectDir) => `${projectDir}/swc-compress.json`;
 
 const exec = promisify(child_process.exec);
 const spawn = promisify(child_process.spawn);
@@ -55,15 +54,12 @@ async function waitExec(cmd) {
         const { stdout, stderr } = await exec(cmd, {
             shell: true,
             stdio: 'inherit',
-            cwd: projectDir
         });
     }
 }
 
 async function getCurrentBranch() {
-    const { stdout, stderr } = await exec('git rev-parse --abbrev-ref HEAD', {
-        cwd: projectDir
-    });
+    const { stdout, stderr } = await exec('git rev-parse --abbrev-ref HEAD');
 
     return stdout.trim()
 }
@@ -72,9 +68,12 @@ async function getCurrentBranch() {
 async function tryOption(description, option) {
     console.group(`Testing: ${description}`);
 
-    console.log(`Writing '${JSON.stringify(option)}' to ${configJsonPath}`);
-    if (!dryRun) {
-        await fs.writeFile(configJsonPath, JSON.stringify(option));
+    for (const projectDir of projectDirs) {
+        console.log(`Writing '${JSON.stringify(option)}' to ${configJsonPath(projectDir)}`);
+        if (!dryRun) {
+            fs.mkdir(projectDir, { recursive: true });
+            await fs.writeFile(configJsonPath(projectDir), JSON.stringify(option));
+        }
     }
 
 
@@ -98,7 +97,6 @@ const curBranch = await getCurrentBranch();
 if (curBranch === 'master' || curBranch === 'main' || curBranch === 'dev') {
     throw new Error(`Current branch is ${curBranch}. As this script creates lots of commit, it should be on a branch that is not master, main or dev.`);
 }
-
 
 // Try disabling one option at a time.
 for (const optionName of optionNames) {
@@ -124,6 +122,8 @@ for (const opt1 of optionNames) {
 }
 
 
-if (!dryRun) {
-    await fs.unlink(configJsonPath);
+for (const projectDir of projectDirs) {
+    if (!dryRun) {
+        await fs.unlink(configJsonPath(projectDir));
+    }
 }
