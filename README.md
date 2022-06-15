@@ -12,6 +12,7 @@ The swc minifier is 20K+ LoCs so looking at all code is impractical, but if the 
 ```
 --dry-run                       Show operations without actually applying it.
 --upstream-branch=<name>        Use <name> as the name of upstream branch.
+--project-dir=<path/to/dir>     Run operations in <path/to/dir>. Useful for monorepos.
 ```
 
 ## Steps

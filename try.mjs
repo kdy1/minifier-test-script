@@ -32,9 +32,14 @@ const optionNames = [
 
 const dryRun = process.argv.includes('--dry-run');
 const upstreamBranch = process.argv.find(v => v.startsWith('--upstream-branch='))?.substring('--upstream-branch='.length);
+const projectDir = (process.argv.find(v => v.startsWith('--project-dir='))?.substring('--project-dir='.length)) ?? '.';
 
 if (!upstreamBranch) {
     throw new Error(`Please set the upstream branch with --upstream-branch=<branch>`)
+}
+
+if (!projectDir) {
+    throw new Error(`Project directory has an invalid value (${projectDir}). Usage: --project-dir=path/to/project/dir`)
 }
 
 const configJsonPath = 'swc-compress.json';
