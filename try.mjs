@@ -42,7 +42,7 @@ if (!projectDir) {
     throw new Error(`Project directory has an invalid value (${projectDir}). Usage: --project-dir=path/to/project/dir`)
 }
 
-const configJsonPath = 'swc-compress.json';
+const configJsonPath = `${projectDir}/swc-compress.json`;
 
 const exec = promisify(child_process.exec);
 const spawn = promisify(child_process.spawn);
@@ -52,15 +52,18 @@ async function waitExec(cmd) {
     console.log(`${dryRun ? '[DRY_RUN]' : ''} Executing ${cmd}`)
 
     if (!dryRun) {
-        const child = await exec(cmd, {
+        const { stdout, stderr } = await exec(cmd, {
             shell: true,
             stdio: 'inherit',
+            cwd: projectDir
         });
     }
 }
 
 async function getCurrentBranch() {
-    const { stdout, stderr } = await exec('git rev-parse --abbrev-ref HEAD');
+    const { stdout, stderr } = await exec('git rev-parse --abbrev-ref HEAD', {
+        cwd: projectDir
+    });
 
     return stdout.trim()
 }
@@ -121,6 +124,6 @@ for (const opt1 of optionNames) {
 }
 
 
-if (dryRun) {
+if (!dryRun) {
     await fs.unlink(configJsonPath);
 }
