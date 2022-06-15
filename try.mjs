@@ -81,11 +81,11 @@ async function tryOption(description, option) {
         shell: true,
         stdio: 'inherit'
     });
-    await waitExec(`git commit -m "minifier: ${description}"`, {
+    await waitExec(`git commit --no-verify -m "minifier: ${description}"`, {
         shell: true,
         stdio: 'inherit'
     });
-    await waitExec(`git push origin HEAD:${upstreamBranch}`, {
+    await waitExec(`git push --no-verify origin HEAD:${upstreamBranch}`, {
         shell: true,
         stdio: 'inherit'
     });
