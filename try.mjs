@@ -30,6 +30,10 @@ const optionNames = [
     'unused',
 ]
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const dryRun = process.argv.includes('--dry-run');
 const upstreamBranch = process.argv.find(v => v.startsWith('--upstream-branch='))?.substring('--upstream-branch='.length);
 const projectDirs = process.argv.filter(v => v.startsWith('--dir=')).map(s => s.substring('--dir='.length));
@@ -89,6 +93,10 @@ async function tryOption(description, option) {
         shell: true,
         stdio: 'inherit'
     });
+    if (!dryRun) {
+        console.log(`Sleeping for 10 seconds to ensure vercel builds the current commit`)
+        await sleep(10000);
+    }
     console.groupEnd()
 }
 
