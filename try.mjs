@@ -94,8 +94,8 @@ async function tryOption(description, option) {
         stdio: 'inherit'
     });
     if (!dryRun) {
-        console.log(`Sleeping for 10 seconds to ensure vercel builds the current commit`)
-        await sleep(10000);
+        console.log(`Sleeping for 30 seconds to ensure vercel builds the current commit`)
+        await sleep(30000);
     }
     console.groupEnd()
 }
