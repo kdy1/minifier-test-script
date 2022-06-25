@@ -93,10 +93,7 @@ async function tryOption(gitSuffix, description, option) {
         shell: true,
         stdio: 'inherit'
     });
-    if (!dryRun) {
-        console.log(`Sleeping for 10 seconds to ensure vercel builds the current commit`)
-        await sleep(10000);
-    }
+
     console.groupEnd()
 }
 
