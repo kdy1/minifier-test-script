@@ -69,7 +69,7 @@ async function getCurrentBranch() {
 }
 
 
-async function tryOption(description, option) {
+async function tryOption(gitSuffix, description, option) {
     console.group(`Testing: ${description}`);
 
     for (const projectDir of projectDirs) {
@@ -89,7 +89,7 @@ async function tryOption(description, option) {
         shell: true,
         stdio: 'inherit'
     });
-    await waitExec(`git push --no-verify origin HEAD:${upstreamBranch}`, {
+    await waitExec(`git push --no-verify origin HEAD:${upstreamBranch}-${gitSuffix}`, {
         shell: true,
         stdio: 'inherit'
     });
@@ -108,7 +108,7 @@ if (curBranch === 'master' || curBranch === 'main' || curBranch === 'dev') {
 
 // Try disabling one option at a time.
 for (const optionName of optionNames) {
-    await tryOption(`with '${optionName}: false'`, {
+    await tryOption(`1-${optionName}`, `with '${optionName}: false'`, {
         defaults: true,
         [optionName]: false,
     })
@@ -121,7 +121,7 @@ for (const opt1 of optionNames) {
             continue
         }
 
-        await tryOption(`with '${opt1}: false, ${opt2}: false'`, {
+        await tryOption(`2-${opt1}-${opt2}`, `with '${opt1}: false, ${opt2}: false'`, {
             defaults: true,
             [opt1]: false,
             [opt2]: false,
