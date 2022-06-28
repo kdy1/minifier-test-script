@@ -11,7 +11,7 @@ The swc minifier is 20K+ LoCs so looking at all code is impractical, but if the 
 
 ```
 --dry-run                       Show operations without actually applying it.
---upstream-branch=<name>        Use <name> as the name of upstream branch.
+--upstream-branch=<name>        Use <name> as the **prefix** of the name of upstream branch.
 --dir=<path/to/dir>             Run operations in <path/to/dir>. Useful for monorepos. Can be specified multiple time to use multiple next.js applications.
 ```
 
